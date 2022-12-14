@@ -1,18 +1,13 @@
 import {Component} from "react";
 import TileLayer from "ol/layer/Tile";
 import {OSM} from "ol/source";
-import {View, Map, Feature} from "ol";
+import {View, Map} from "ol";
 import {fromLonLat} from "ol/proj";
 import styles from "./Home.module.sass";
 import "../global-styles/OpenLayers.sass";
-import {Point} from "ol/geom";
-import {Layer, Vector} from "ol/layer";
-import {Fill, Icon, Stroke, Style, Text} from "ol/style";
-import VectorLayer from "ol/layer/Vector";
-import VectorSource from "ol/source/Vector";
+
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faLocationDot} from "@fortawesome/free-solid-svg-icons";
-import FontSymbol from "ol-ext/style/FontSymbol";
 import Popup from "ol-ext/overlay/Popup";
 import {renderToString} from "react-dom/server";
 
@@ -49,7 +44,7 @@ class Home extends Component<{}, {currentLocation: number[], myMap: Map, openPop
             this.setState({...this.state, openPopup: null});
             return;
         }
-        var popup = new Popup({positioning: 'bottom-center', popupClass: styles.popup});
+        const popup = new Popup({positioning: 'bottom-center', popupClass: styles.popup});
         this.state.myMap.addOverlay(popup);
         const center = fromLonLat(this.state.currentLocation);
         popup.show(center, renderToString(
@@ -66,7 +61,7 @@ class Home extends Component<{}, {currentLocation: number[], myMap: Map, openPop
             const zoom = 12;
             this.state.myMap.getView().animate({zoom: zoom, center: center}, {duration: 2000});
 
-            var popup = new Popup({positioning: 'bottom-center', popupClass: styles.popup});
+            const popup = new Popup({positioning: 'bottom-center', popupClass: styles.popup});
             this.state.myMap.addOverlay(popup);
             popup.show(center, renderToString(
                 <div className={styles.locationMarker} id={"currentLocation"}>
