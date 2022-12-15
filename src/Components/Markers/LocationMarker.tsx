@@ -25,7 +25,7 @@ const LocationMarker = ({ children, position, onClick }: PropsWithChildren<{posi
             map!.removeOverlay(popup!);
             document.getElementById("currentLocation")?.removeEventListener("click", onClick);
         }
-    }, [position, onClick]);
+    }, [position, onClick, map]);
 
     return (<>{children}</>);
 }

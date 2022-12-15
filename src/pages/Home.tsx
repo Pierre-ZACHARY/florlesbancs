@@ -7,9 +7,6 @@ import CurrentLocationMarker from "../Components/Markers/CurrentLocationMarker";
 
 
 class Home extends Component<{}, {}> {
-    constructor(props: any) {
-        super(props);
-    }
 
     componentDidMount() {
 
