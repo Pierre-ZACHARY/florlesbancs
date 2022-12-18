@@ -4,6 +4,7 @@ import MapContainer from "../Components/Context/MapContainer";
 import CurrentLocationContextCreator from "../Components/Context/CurrentLocationContainer";
 import CurrentLocationMarker from "../Components/Markers/CurrentLocationMarker";
 import NearestBenchButton from "../Components/Buttons/NearestBench";
+import CurrentLocationButton from "../Components/Buttons/CurrentLocation";
 
 
 
@@ -25,6 +26,7 @@ class Home extends Component<{}, {}> {
                         zIndex: 10,
                     }}>
                         <NearestBenchButton/>
+                        <CurrentLocationButton/>
                     </div>
                 </CurrentLocationContextCreator>
             </MapContainer>

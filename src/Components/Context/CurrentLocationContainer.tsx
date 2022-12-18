@@ -14,14 +14,13 @@ const CurrentLocationContextCreator = (props: PropsWithChildren<{}>) => {
             if(firstZoom) {
                 map?.getView().setZoom(12);
                 setFirstZoom(false);
+                map!.getView().animate({zoom: map?.getView().getZoom(), center: fromLonLat([position.coords.longitude, position.coords.latitude])}, {duration: 2000});
             }
             setCurrentLocation([position.coords.longitude, position.coords.latitude]);
         });
         return ()=>{navigator.geolocation.clearWatch(id)};
     }, [map, firstZoom]);
-    useEffect(() => {
-        map!.getView().animate({zoom: map?.getView().getZoom(), center: fromLonLat(currentLocation)}, {duration: 2000});
-    }, [currentLocation, map]);
+
 
     return (
         <CurrentLocationContext.Provider value={value}>

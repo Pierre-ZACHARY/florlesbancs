@@ -55,7 +55,7 @@ const NearestBenchButton = () => {
                 style: new Style({
                     stroke: new Stroke({
                         width: 4,
-                        color: 'red',
+                        color: 'blue',
                     }),
                 }),
             });
@@ -74,16 +74,16 @@ const NearestBenchButton = () => {
                 }),
                 style:  new Style({
                     stroke: new Stroke({
-                        color: 'red',
-                        width: 2,
-                        lineDash: [1, 4]
+                        color: 'blue',
+                        width: 4,
+                        lineDash: [2, 8]
                     })
                 })
             });
             map!.addLayer(routeLayer);
             map!.addLayer(dotLineLayer);
             map!.getView().fit(routeFeature.getGeometry()!.getExtent(), {
-                    padding: [200, 200, 200, 200],
+                    padding: [75, 75, 75, 75],
                     duration: 500,
             });
             return () => {
