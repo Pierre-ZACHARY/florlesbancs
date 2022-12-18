@@ -7,6 +7,13 @@
 
 .locationMarker
   cursor: pointer
+  transform: scale(1)
+  animation: 0.2s scaleUp cubic-bezier(0.4, 0, 0.51, 2.43)
+  @keyframes scaleUp
+    from
+      transform: scale(0)
+    to
+      transform: scale(1)
   button
     display: none
   svg
@@ -15,7 +22,8 @@
     height: 40px
     z-index: 1000
     path
-      fill: #39c033
+      fill: #000
+
 
 .locationMarkerPopup
   button

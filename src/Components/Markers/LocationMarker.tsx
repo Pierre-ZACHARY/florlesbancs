@@ -4,30 +4,27 @@ import {MapContext} from "../Context/MapContainer";
 import Popup from "ol-ext/overlay/Popup";
 import {renderToString} from "react-dom/server";
 import styles from "./Markers.module.sass";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faLocationDot} from "@fortawesome/free-solid-svg-icons";
 
-
-const LocationMarker = ({ children, position, onClick }: PropsWithChildren<{position: Coordinate, onClick: ()=>void}>) => {
+const LocationMarker = ({ children, position, onClick, positioning }: PropsWithChildren<{position: Coordinate, onClick: ()=>void, positioning: string}>) => {
     const map = useContext(MapContext);
     useEffect(() => {
-        const popup = new Popup({positioning: 'bottom-center', popupClass: styles.popup});
+        const popup = new Popup({positioning: positioning, popupClass: styles.popup});
         map!.addOverlay(popup);
         popup.show(position, renderToString(
-            <div className={styles.locationMarker} id={"currentLocation"}>
-                <FontAwesomeIcon icon={faLocationDot}/>
+            <div className={styles.locationMarker} id={"marker"+position.toString()}>
+                {children}
             </div>));
 
         // On ne peut pas ajouter de Onclick dans le renderToString donc on le fait après... ( nul )
-        document.getElementById("currentLocation")?.addEventListener("click", onClick);
+        document.getElementById("marker"+position.toString())?.addEventListener("click", onClick);
         return () => {
             popup!.hide();
             map!.removeOverlay(popup!);
-            document.getElementById("currentLocation")?.removeEventListener("click", onClick);
+            document.getElementById("marker"+position.toString())?.removeEventListener("click", onClick);
         }
-    }, [position, onClick, map]);
+    }, [position, onClick, map, children, positioning]);
 
-    return (<>{children}</>);
+    return (<></>);
 }
 
 export default LocationMarker;
