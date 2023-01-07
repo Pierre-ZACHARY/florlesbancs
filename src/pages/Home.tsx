@@ -5,7 +5,7 @@ import CurrentLocationContextCreator from "../Components/Context/CurrentLocation
 import CurrentLocationMarker from "../Components/Markers/CurrentLocationMarker";
 import NearestBenchButton from "../Components/Buttons/NearestBench";
 import CurrentLocationButton from "../Components/Buttons/CurrentLocation";
-import GeoServerContextComponent, {GeoServerContext} from "../Components/Context/GeoServerContext";
+import GeoServerContextComponent from "../Components/Context/GeoServerContext";
 import FilterButton from "../Components/Buttons/FilterButton";
 
 

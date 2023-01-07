@@ -1,21 +1,13 @@
-import {createContext, PropsWithChildren, useContext, useEffect, useState} from "react";
+import {createContext, PropsWithChildren, useEffect, useState} from "react";
 import {TileWMS} from "ol/source";
-import {MapContext} from "./MapContainer";
-import VectorLayer from "ol/layer/Vector";
-import VectorSource from "ol/source/Vector";
-import {GeoJSON} from "ol/format";
+
 import LocationMarker from "../Markers/LocationMarker";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faChair, faLocation, faLocationPin, faMonument} from "@fortawesome/free-solid-svg-icons";
+import {faChair, faLocationPin, faMonument} from "@fortawesome/free-solid-svg-icons";
 import {faPagelines} from "@fortawesome/free-brands-svg-icons";
 import {fromLonLat} from "ol/proj";
 import fetchGeoserverData from "../../utils/fetchGeoserverData";
 
-
-interface GeoServerContextType { // TODO c'est juste un exemple de context, à toi de voir comment tu veux faire
-    data:   null;
-    filter: string; // TODO : Change to enum
-}
 
 export const GeoServerContext = createContext<TileWMS[] | null>(null);
 
@@ -44,8 +36,9 @@ export default function GeoServerContextComponent(props: PropsWithChildren<{}>) 
 
     // const [context] = useState<GeoServerContextType | null>( () => {
 
-    const map = useContext(MapContext);
+    // const map = useContext(MapContext);
     const [espace, setEspace] = useState<any>(null);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [pav, setPav] = useState<any>(null);
     useEffect ( ()=>{
         fetchGeoserverData().then(([espace, pav]) => {

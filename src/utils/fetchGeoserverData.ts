@@ -1,7 +1,3 @@
-import {TileWMS} from "ol/source";
-import {Point} from "ol/geom";
-
-
 export default async function fetchGeoserverData(): Promise<any[]> {
     const resp1 = await fetch("http://localhost:8080/geoserver/toto/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=toto%3Aespaces_verts_voirie&outputFormat=application%2Fjson")
     const resp2 = await fetch("http://localhost:8080/geoserver/toto/ows?service=WFS&version=1.0.0&request=GetFeature&typeName=toto%3Adechets_pav&outputFormat=application%2Fjson")
