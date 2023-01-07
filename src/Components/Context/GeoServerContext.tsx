@@ -1,49 +1,76 @@
 import {createContext, PropsWithChildren, useContext, useEffect, useState} from "react";
-import fetchGeoserverData, {GeoServerData} from "../../utils/fetchGeoserverData";
-import TileLayer from "ol/layer/Tile";
 import {TileWMS} from "ol/source";
 import {MapContext} from "./MapContainer";
+import VectorLayer from "ol/layer/Vector";
+import VectorSource from "ol/source/Vector";
+import {GeoJSON} from "ol/format";
+import LocationMarker from "../Markers/LocationMarker";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faChair, faLocation, faLocationPin, faMonument} from "@fortawesome/free-solid-svg-icons";
+import {faPagelines} from "@fortawesome/free-brands-svg-icons";
+import {fromLonLat} from "ol/proj";
+import fetchGeoserverData from "../../utils/fetchGeoserverData";
 
 
 interface GeoServerContextType { // TODO c'est juste un exemple de context, à toi de voir comment tu veux faire
-    data: GeoServerData[] | null;
+    data:   null;
     filter: string; // TODO : Change to enum
 }
 
 export const GeoServerContext = createContext<TileWMS[] | null>(null);
 
 
+function changeIcon(feat: any) {
+    console.log(feat);
+    var descr = feat.properties.descriptio;
+    switch (descr) {
+        case "Banc public":
+            return <FontAwesomeIcon icon={faChair}/>
+
+        case "Colonne végétale":
+            return <FontAwesomeIcon icon={faPagelines}/>
+
+        case "Statue, monument" :
+            return <FontAwesomeIcon icon={faMonument}/>
+
+        default:
+            return <FontAwesomeIcon icon={faLocationPin}/>
+    }
+}
+
 export default function GeoServerContextComponent(props: PropsWithChildren<{}>) {
 
     // /!\ ne jamais fetch un objet à ce niveau, sinon il sera refetch à chaque re-render
 
     // const [context] = useState<GeoServerContextType | null>( () => {
-    //     // TODO ici on fetch les données via le utils dans fetchGeoserverData.ts
-
-    const [data,setData] = useState<TileWMS[] | null>( null );
-    useEffect(() => {
-        fetchGeoserverData().then((data) => setData(data))}, []);
-    //var layers = [new TileLayer({source:data[0]}), new TileLayer({source:data[1]})]
 
     const map = useContext(MapContext);
+    const [espace, setEspace] = useState<any>(null);
+    const [pav, setPav] = useState<any>(null);
     useEffect ( ()=>{
-        if (data) {
-            const espaces = new TileLayer({source: data[0]});
-            const pav = new TileLayer({source: data[1]});
+        fetchGeoserverData().then(([espace, pav]) => {
+            setEspace(espace);
+            setPav(pav);
+        });
+    }, [])
 
-            map?.addLayer(espaces);
-            map?.addLayer(pav);
+    let feature = <></>
 
-            return () => {
-                map?.removeLayer(espaces);
-                map?.removeLayer(pav);
-            }
-        }
-    }, [data])
+    if(espace){
+        feature = espace.slice(0, 100).map((feature: any) => {
+            return <LocationMarker position={fromLonLat(feature.geometry.coordinates)} onClick={()=>{}} positioning={"bottom-center"}>
+                        {changeIcon(feature)}
+                    </LocationMarker>
+        })
+
+    }
 
     return (
-        <GeoServerContext.Provider value={data}>
-            {props.children}
+        <GeoServerContext.Provider value={[]}>
+            <>
+                {feature}
+                {props.children}
+            </>
         </GeoServerContext.Provider>
     )
 }
