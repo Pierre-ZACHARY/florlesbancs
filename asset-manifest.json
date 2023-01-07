@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/florlesbancs/static/css/main.ebab0f5b.css",
+    "main.js": "/florlesbancs/static/js/main.86d33232.js",
+    "static/js/787.d88bba00.chunk.js": "/florlesbancs/static/js/787.d88bba00.chunk.js",
+    "index.html": "/florlesbancs/index.html",
+    "main.ebab0f5b.css.map": "/florlesbancs/static/css/main.ebab0f5b.css.map",
+    "main.86d33232.js.map": "/florlesbancs/static/js/main.86d33232.js.map",
+    "787.d88bba00.chunk.js.map": "/florlesbancs/static/js/787.d88bba00.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.ebab0f5b.css",
+    "static/js/main.86d33232.js"
+  ]
+}
