@@ -10,9 +10,11 @@ import {GeoJSON} from "ol/format";
 import {Icon, Style} from "ol/style";
 import styleFunctionEspacesVerts from "../../utils/styleFunctions";
 import findNearestPointOnVectorLayer from "../../utils/findNearestPoint";
+import LayersMapContext from "./LayerMapContext";
 
 
 export const GeoServerContext = createContext<TileWMS[] | null>(null);
+
 
 export default function GeoServerContextComponent(props: PropsWithChildren<{}>) {
 
@@ -32,6 +34,7 @@ export default function GeoServerContextComponent(props: PropsWithChildren<{}>) 
     }, [])
 
     const map = useContext(MapContext);
+    const layersMap = useContext(LayersMapContext);
     useEffect(()=> {
         if (espace && pav){
             const featureMap = new Map();
@@ -54,11 +57,15 @@ export default function GeoServerContextComponent(props: PropsWithChildren<{}>) 
                 const source = new VectorSource({
                     features: new GeoJSON().readFeatures(geojsonData)
                 });
-                vectorLayers.push(new VectorLayer({
+                const description = featureList[0].properties.descriptio;
+                const layer = new VectorLayer({
                     source: source,
                     // @ts-ignore
                     style: styleFunctionEspacesVerts,
-                }));
+                })
+                layersMap.set(description, layer);
+                vectorLayers.push(layer);
+
             });
 
             const pavMap = new Map();
@@ -96,8 +103,16 @@ export default function GeoServerContextComponent(props: PropsWithChildren<{}>) 
                 const source = new VectorSource({
                     features: new GeoJSON().readFeatures(geojsonData)
                 });
+                var layer;
+                var isOpen;
+                if (featureList.length > 0){
+                    isOpen = featureList[0].properties.status
+                }
+                else{
+                    isOpen = "closed";
+                }
                 if (key) {
-                    pavVectorLayers.push(new VectorLayer({
+                    layer = new VectorLayer({
                         source: source,
                         style: new Style({
                             image: new Icon({
@@ -105,9 +120,9 @@ export default function GeoServerContextComponent(props: PropsWithChildren<{}>) 
                                 color: "#00ff00"
                             }),
                         }),
-                    }));
+                    })
                 } else {
-                    pavVectorLayers.push(new VectorLayer({
+                    layer = new VectorLayer({
                         source: source,
                         style: new Style({
                             image: new Icon({
@@ -115,9 +130,13 @@ export default function GeoServerContextComponent(props: PropsWithChildren<{}>) 
                                 color: "#ff0000"
                             }),
                         }),
-                    }));
+                    })
                 }
+
+                layersMap.set(isOpen, layer );
+                pavVectorLayers.push(layer);
             });
+            
 
             for (let i = 0 ; i < pavVectorLayers.length; i++){
                 map?.addLayer(pavVectorLayers[i]);
@@ -127,10 +146,9 @@ export default function GeoServerContextComponent(props: PropsWithChildren<{}>) 
                 map?.addLayer(vectorLayers[i]);
             }
 
-            console.log(vectorLayers);
-            console.log(pavVectorLayers);
-
-
+            // @ts-ignore
+            layersMap.get("Banc public").setVisible(false);
+            
             map?.on('singleclick', (event) => {
                 const coordinate = event.coordinate;
                 var pixel = map.getEventPixel(event.originalEvent);
@@ -160,7 +178,7 @@ export default function GeoServerContextComponent(props: PropsWithChildren<{}>) 
             }
         }
     }, [espace, pav])
-
+    
 
     // let feature = <></>
     //
@@ -178,7 +196,9 @@ export default function GeoServerContextComponent(props: PropsWithChildren<{}>) 
         <GeoServerContext.Provider value={[]}>
             <>
                 {/*{feature}*/}
+                <LayersMapContext.Provider value={layersMap}>
                 {props.children}
+                </LayersMapContext.Provider>
             </>
         </GeoServerContext.Provider>
     )
