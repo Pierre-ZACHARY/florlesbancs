@@ -118,11 +118,12 @@ export default function GeoServerContextComponent(props: PropsWithChildren<{}>) 
                 }
             });
 
-            for (let i = 0 ; i < vectorLayers.length; i++){
-                map?.addLayer(vectorLayers[i]);
-            }
             for (let i = 0 ; i < pavVectorLayers.length; i++){
                 map?.addLayer(pavVectorLayers[i]);
+            }
+
+            for (let i = 0 ; i < vectorLayers.length; i++){
+                map?.addLayer(vectorLayers[i]);
             }
 
             return () => {
