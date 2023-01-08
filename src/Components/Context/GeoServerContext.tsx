@@ -1,10 +1,5 @@
 import {createContext, PropsWithChildren, useContext, useEffect, useState} from "react";
 import {TileWMS, Vector} from "ol/source";
-
-import LocationMarker from "../Markers/LocationMarker";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faChair, faLocationPin, faMonument} from "@fortawesome/free-solid-svg-icons";
-import {faPagelines} from "@fortawesome/free-brands-svg-icons";
 import {fromLonLat} from "ol/proj";
 import fetchGeoserverData from "../../utils/fetchGeoserverData";
 import {MapContext} from "./MapContainer";
@@ -12,69 +7,11 @@ import VectorLayer from "ol/layer/Vector";
 import {Geometry} from "ol/geom";
 import VectorSource from "ol/source/Vector";
 import {GeoJSON} from "ol/format";
-import {transformExtent} from "ol/proj";
-import findNearestPointOnVectorLayer from "../../utils/findNearestPoint";
+import {Icon, Style} from "ol/style";
+import styleFunctionEspacesVerts from "../../utils/styleFunctions";
 
 
 export const GeoServerContext = createContext<TileWMS[] | null>(null);
-
-
-function changeIcon(feat: any) {
-    // console.log(feat);
-    var descr = feat.properties.descriptio;
-    switch (descr) {
-        case "Banc public":
-            return <FontAwesomeIcon icon={faChair}/>
-
-        case "Colonne végétale":
-            return <FontAwesomeIcon icon={faPagelines}/>
-
-        case "Statue, monument" :
-            return <FontAwesomeIcon icon={faMonument}/>
-
-        case "Bac à fleur rectangulaire":
-            return <FontAwesomeIcon icon={faLocationPin}/>
-
-        case "Armoire d'arrosage":
-            return <FontAwesomeIcon icon={faLocationPin}/>
-
-        case "Grille ronde arbre":
-            return <FontAwesomeIcon icon={faLocationPin}/>
-
-        case "Jardinière sur poteau" :
-            return <FontAwesomeIcon icon={faLocationPin}/>
-
-        case "Jeu d'enfant rond":
-            return <FontAwesomeIcon icon={faLocationPin}/>
-
-        case "Jeu d'enfant rectangulaire":
-            return <FontAwesomeIcon icon={faLocationPin}/>
-
-        case "Tête d'arrosage":
-            return <FontAwesomeIcon icon={faLocationPin}/>
-
-        case "Portique pour végétation" :
-            return <FontAwesomeIcon icon={faLocationPin}/>
-
-        case "Robinet ou vanne d'arrosage":
-            return <FontAwesomeIcon icon={faLocationPin}/>
-
-        case "Manège":
-            return <FontAwesomeIcon icon={faLocationPin}/>
-
-        case "Jardinière suspendue":
-            return <FontAwesomeIcon icon={faLocationPin}/>
-
-        case "Grille carrée arbre" :
-            return <FontAwesomeIcon icon={faLocationPin}/>
-
-        case "Jardinière ronde":
-            return <FontAwesomeIcon icon={faLocationPin}/>
-
-        default:
-            return <FontAwesomeIcon icon={faLocationPin}/>
-    }
-}
 
 export default function GeoServerContextComponent(props: PropsWithChildren<{}>) {
 
@@ -118,7 +55,8 @@ export default function GeoServerContextComponent(props: PropsWithChildren<{}>) 
                 });
                 vectorLayers.push(new VectorLayer({
                     source: source,
-                    // vous pouvez définir un style pour la couche ici
+                    // @ts-ignore
+                    style: styleFunctionEspacesVerts,
                 }));
             });
 
@@ -148,7 +86,8 @@ export default function GeoServerContextComponent(props: PropsWithChildren<{}>) 
             });
 
             const pavVectorLayers: VectorLayer<Vector<Geometry>>[] = [];
-            pavMap.forEach((featureList) => {
+            const srcUrl = `${process.env.PUBLIC_URL}/`;
+            pavMap.forEach((featureList,key) => {
                 const geojsonData = {
                     type: 'FeatureCollection',
                     features: featureList
@@ -156,10 +95,27 @@ export default function GeoServerContextComponent(props: PropsWithChildren<{}>) 
                 const source = new VectorSource({
                     features: new GeoJSON().readFeatures(geojsonData)
                 });
-                pavVectorLayers.push(new VectorLayer({
-                    source: source,
-                    // vous pouvez définir un style pour la couche ici
-                }));
+                if (key) {
+                    pavVectorLayers.push(new VectorLayer({
+                        source: source,
+                        style: new Style({
+                            image: new Icon({
+                                src: srcUrl + 'bin.svg',
+                                color: "#00ff00"
+                            }),
+                        }),
+                    }));
+                } else {
+                    pavVectorLayers.push(new VectorLayer({
+                        source: source,
+                        style: new Style({
+                            image: new Icon({
+                                src: srcUrl + 'bin.svg',
+                                color: "#ff0000"
+                            }),
+                        }),
+                    }));
+                }
             });
 
             for (let i = 0 ; i < vectorLayers.length; i++){
@@ -168,17 +124,6 @@ export default function GeoServerContextComponent(props: PropsWithChildren<{}>) 
             for (let i = 0 ; i < pavVectorLayers.length; i++){
                 map?.addLayer(pavVectorLayers[i]);
             }
-
-            map?.on('singleclick', (event) => {
-                const coordinate = event.coordinate;
-                var pixel = map.getEventPixel(event.originalEvent);
-                console.log(`User clicked the map at coordinates: ${coordinate}`);
-                const nearestPoint = findNearestPointOnVectorLayer(map, pixel, coordinate);
-                console.log(nearestPoint);
-
-            });
-
-
 
             return () => {
                 for (let i = 0; i < vectorLayers.length; i++){
