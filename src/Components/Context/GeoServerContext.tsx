@@ -9,6 +9,7 @@ import VectorSource from "ol/source/Vector";
 import {GeoJSON} from "ol/format";
 import {Icon, Style} from "ol/style";
 import styleFunctionEspacesVerts from "../../utils/styleFunctions";
+import findNearestPointOnVectorLayer from "../../utils/findNearestPoint";
 
 
 export const GeoServerContext = createContext<TileWMS[] | null>(null);
@@ -125,6 +126,19 @@ export default function GeoServerContextComponent(props: PropsWithChildren<{}>) 
             for (let i = 0 ; i < vectorLayers.length; i++){
                 map?.addLayer(vectorLayers[i]);
             }
+
+            console.log(vectorLayers);
+            console.log(pavVectorLayers);
+
+            map?.on('singleclick', (event) => {
+                const coordinate = event.coordinate;
+                var pixel = map.getEventPixel(event.originalEvent);
+                console.log(`User clicked the map at coordinates: ${coordinate}`);
+
+                // Find the nearest point on the vector layer to the click
+                const nearestPoint = findNearestPointOnVectorLayer(vectorLayers, pavVectorLayers, coordinate);
+                console.log(nearestPoint);
+            });
 
             return () => {
                 for (let i = 0; i < vectorLayers.length; i++){
