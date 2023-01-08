@@ -1,44 +1,64 @@
 import {Coordinate} from "ol/coordinate";
 import {Feature} from "ol";
 import VectorLayer from "ol/layer/Vector";
+import {Point} from "ol/geom";
+import {Pixel} from "ol/pixel";
+import {Map} from "ol"
 
-
-
-export default function findNearestPointOnVectorLayer(vertsLayers : VectorLayer<any>[], pavLayers : VectorLayer<any>[], coords: Coordinate) : Feature {
+export default function findNearestPointOnVectorLayer(map : Map, pixel : Pixel, coords: Coordinate) : Feature {
     let minDistance = Infinity;
     let nearestCoords;
     let nearestFeature;
-
-    for (let i = 0; i < vertsLayers.length; i++){
-        console.log(i)
-        const feature = vertsLayers[i].getSource().getClosestFeatureToCoordinate(coords);
+    map.forEachFeatureAtPixel(pixel, (feature) => {
+        // @ts-ignore
         const featureCoordinates = feature.getGeometry().getCoordinates();
         const distance = calculateDistance(coords, featureCoordinates);
         if (distance < minDistance) {
-            console.log("SWITCH");
             minDistance = distance;
             nearestCoords = featureCoordinates;
             nearestFeature = feature;
         }
-    }
-
-    for (let i = 0; i < pavLayers.length; i++){
-        console.log(i)
-        const feature = pavLayers[i].getSource().getClosestFeatureToCoordinate(coords);
-        const featureCoordinates = feature.getGeometry().getCoordinates();
-        const distance = calculateDistance(coords, featureCoordinates);
-        if (distance < minDistance) {
-            console.log("SWITCH");
-            minDistance = distance;
-            nearestCoords = featureCoordinates;
-            nearestFeature = feature;
-        }
-    }
-
+    });
     // @ts-ignore
     return nearestFeature;
 
 }
+
+// export default function findNearestPointOnVectorLayer(vertsLayers : VectorLayer<any>[], pavLayers : VectorLayer<any>[], coords: Coordinate) : Feature {
+//     let minDistance = Infinity;
+//     let nearestCoords;
+//     let nearestFeature;
+//
+//     for (let i = 0; i < vertsLayers.length; i++){
+//         console.log(i)
+//         // @ts-ignore
+//         const feature = vertsLayers[i].getSource().getClosestFeatureToCoordinate(coords, (feat) => calculateDistance(feat.getGeometry().getCoordinates(), coords) < 10000000);
+//         const featureCoordinates = feature.getGeometry().getCoordinates();
+//         const distance = calculateDistance(coords, featureCoordinates);
+//         if (distance < minDistance) {
+//             console.log("SWITCH");
+//             minDistance = distance;
+//             nearestCoords = featureCoordinates;
+//             nearestFeature = feature;
+//         }
+//     }
+//
+//     for (let i = 0; i < pavLayers.length; i++){
+//         console.log(i)
+//         const feature = pavLayers[i].getSource().getClosestFeatureToCoordinate(coords);
+//         const featureCoordinates = feature.getGeometry().getCoordinates();
+//         const distance = calculateDistance(coords, featureCoordinates);
+//         if (distance < minDistance) {
+//             console.log("SWITCH");
+//             minDistance = distance;
+//             nearestCoords = featureCoordinates;
+//             nearestFeature = feature;
+//         }
+//     }
+//
+//     // @ts-ignore
+//     return nearestFeature;
+
 function calculateDistance(point1:Coordinate, point2: Coordinate){
     const R = 6371e3;
     const phi1 = point1[1] * Math.PI / 180;

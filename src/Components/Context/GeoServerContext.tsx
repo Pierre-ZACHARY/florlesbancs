@@ -129,15 +129,25 @@ export default function GeoServerContextComponent(props: PropsWithChildren<{}>) 
             console.log(vectorLayers);
             console.log(pavVectorLayers);
 
+
             map?.on('singleclick', (event) => {
                 const coordinate = event.coordinate;
                 var pixel = map.getEventPixel(event.originalEvent);
                 console.log(`User clicked the map at coordinates: ${coordinate}`);
 
                 // Find the nearest point on the vector layer to the click
-                const nearestPoint = findNearestPointOnVectorLayer(vectorLayers, pavVectorLayers, coordinate);
+                const nearestPoint = findNearestPointOnVectorLayer(map, pixel, coordinate);
                 console.log(nearestPoint);
             });
+            // map?.on('singleclick', (event) => {
+            //     const coordinate = event.coordinate;
+            //     var pixel = map.getEventPixel(event.originalEvent);
+            //     console.log(`User clicked the map at coordinates: ${coordinate}`);
+            //
+            //     // Find the nearest point on the vector layer to the click
+            //     const nearestPoint = findNearestPointOnVectorLayer(vectorLayers, pavVectorLayers, coordinate);
+            //     console.log(nearestPoint);
+            // });
 
             return () => {
                 for (let i = 0; i < vectorLayers.length; i++){
