@@ -1,5 +1,5 @@
 import {createContext, PropsWithChildren, useContext, useEffect, useState} from "react";
-import {TileWMS, Vector} from "ol/source";
+import {Cluster, TileWMS, Vector} from "ol/source";
 import {fromLonLat} from "ol/proj";
 import fetchGeoserverData from "../../utils/fetchGeoserverData";
 import {MapContext} from "./MapContainer";
@@ -11,10 +11,10 @@ import {Icon, Style} from "ol/style";
 import styleFunctionEspacesVerts from "../../utils/styleFunctions";
 import findNearestPointOnVectorLayer from "../../utils/findNearestPoint";
 import LayersMapContext from "./LayerMapContext";
+import LayerSwitcher from "ol-ext/control/LayerSwitcher";
 
 
 export const GeoServerContext = createContext<TileWMS[] | null>(null);
-
 
 export default function GeoServerContextComponent(props: PropsWithChildren<{}>) {
 
@@ -49,7 +49,7 @@ export default function GeoServerContextComponent(props: PropsWithChildren<{}>) 
             });
 
             const vectorLayers: VectorLayer<Vector<Geometry>>[] = [];
-            featureMap.forEach((featureList) => {
+            featureMap.forEach((featureList, key) => {
                 const geojsonData = {
                     type: 'FeatureCollection',
                     features: featureList
@@ -59,6 +59,7 @@ export default function GeoServerContextComponent(props: PropsWithChildren<{}>) 
                 });
                 const description = featureList[0].properties.descriptio;
                 const layer = new VectorLayer({
+                    title: key,
                     source: source,
                     // @ts-ignore
                     style: styleFunctionEspacesVerts,
@@ -113,6 +114,8 @@ export default function GeoServerContextComponent(props: PropsWithChildren<{}>) 
                 }
                 if (key) {
                     layer = new VectorLayer({
+                        // @ts-ignore
+                        title: 'Poubelles dispo',
                         source: source,
                         style: new Style({
                             image: new Icon({
@@ -123,6 +126,8 @@ export default function GeoServerContextComponent(props: PropsWithChildren<{}>) 
                     })
                 } else {
                     layer = new VectorLayer({
+                        // @ts-ignore
+                        title: 'Poubelles fermées',
                         source: source,
                         style: new Style({
                             image: new Icon({
@@ -136,7 +141,14 @@ export default function GeoServerContextComponent(props: PropsWithChildren<{}>) 
                 layersMap.set(isOpen, layer );
                 pavVectorLayers.push(layer);
             });
-            
+
+            console.log(layersMap)
+
+            const layerSwitcher = new LayerSwitcher({
+
+            });
+            map?.addControl(layerSwitcher);
+
 
             for (let i = 0 ; i < pavVectorLayers.length; i++){
                 map?.addLayer(pavVectorLayers[i]);
@@ -146,27 +158,14 @@ export default function GeoServerContextComponent(props: PropsWithChildren<{}>) 
                 map?.addLayer(vectorLayers[i]);
             }
 
-            // @ts-ignore
-            layersMap.get("Banc public").setVisible(false);
-            
             map?.on('singleclick', (event) => {
                 const coordinate = event.coordinate;
                 var pixel = map.getEventPixel(event.originalEvent);
-                console.log(`User clicked the map at coordinates: ${coordinate}`);
 
                 // Find the nearest point on the vector layer to the click
                 const nearestPoint = findNearestPointOnVectorLayer(map, pixel, coordinate);
                 console.log(nearestPoint);
             });
-            // map?.on('singleclick', (event) => {
-            //     const coordinate = event.coordinate;
-            //     var pixel = map.getEventPixel(event.originalEvent);
-            //     console.log(`User clicked the map at coordinates: ${coordinate}`);
-            //
-            //     // Find the nearest point on the vector layer to the click
-            //     const nearestPoint = findNearestPointOnVectorLayer(vectorLayers, pavVectorLayers, coordinate);
-            //     console.log(nearestPoint);
-            // });
 
             return () => {
                 for (let i = 0; i < vectorLayers.length; i++){
@@ -178,7 +177,7 @@ export default function GeoServerContextComponent(props: PropsWithChildren<{}>) 
             }
         }
     }, [espace, pav])
-    
+
 
     // let feature = <></>
     //

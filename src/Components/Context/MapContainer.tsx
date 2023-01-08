@@ -11,6 +11,8 @@ const MapContainer = (props: PropsWithChildren<{}>) => {
         target: "",
         layers: [
             new TileLayer({
+                // @ts-ignore
+                title: 'OSM',
                 source: new OSM(),
             }),
         ],
