@@ -1,5 +1,5 @@
 import {createContext, PropsWithChildren, useContext, useEffect, useState} from "react";
-import {Cluster, TileWMS, Vector} from "ol/source";
+import {TileWMS, Vector} from "ol/source";
 import {fromLonLat} from "ol/proj";
 import fetchGeoserverData from "../../utils/fetchGeoserverData";
 import {MapContext} from "./MapContainer";
@@ -9,7 +9,6 @@ import VectorSource from "ol/source/Vector";
 import {GeoJSON} from "ol/format";
 import {Icon, Style} from "ol/style";
 import styleFunctionEspacesVerts from "../../utils/styleFunctions";
-import findNearestPointOnVectorLayer from "../../utils/findNearestPoint";
 import LayersMapContext from "./LayerMapContext";
 import LayerSwitcher from "ol-ext/control/LayerSwitcher";
 
@@ -158,14 +157,7 @@ export default function GeoServerContextComponent(props: PropsWithChildren<{}>) 
                 map?.addLayer(vectorLayers[i]);
             }
 
-            map?.on('singleclick', (event) => {
-                const coordinate = event.coordinate;
-                var pixel = map.getEventPixel(event.originalEvent);
 
-                // Find the nearest point on the vector layer to the click
-                const nearestPoint = findNearestPointOnVectorLayer(map, pixel, coordinate);
-                console.log(nearestPoint);
-            });
 
             return () => {
                 for (let i = 0; i < vectorLayers.length; i++){
@@ -176,6 +168,7 @@ export default function GeoServerContextComponent(props: PropsWithChildren<{}>) 
                 }
             }
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [espace, pav])
 
 

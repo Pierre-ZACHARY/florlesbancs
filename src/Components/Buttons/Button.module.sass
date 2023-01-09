@@ -11,6 +11,69 @@
     cursor: pointer
     &.active
       color: #76e8ff
-    &disabled
+    &:disabled
       opacity: 0.5
       cursor: not-allowed
+
+
+.modal
+  position: absolute
+  bottom: 0
+  left: 0
+  width: 100vw
+  height: 100vh
+  pointer-events: none
+  display: flex
+  justify-content: center
+  align-items: center
+  .modalMain
+    background-color: #f1f1f1
+    min-width: 200px
+    min-height: 200px
+    height: 50vh
+    width: 50vw
+    border-radius: 10px
+    pointer-events: all
+    position: relative
+    padding: 20px
+    display: flex
+    flex-direction: column
+    justify-content: center
+    align-items: center
+    gap: 10px
+    h1
+      margin: 0
+      text-align: center
+    p
+      margin: 0
+      text-align: center
+      font-size: 12px
+      color: #666666
+    button
+      cursor: pointer
+      &.send
+        font-size: 20px
+        margin: auto
+        background-color: var(--button-background)
+        border-radius: 10px
+        color: var(--button-font-color)
+        border: none
+        padding: 10px 15px
+      &.close
+        border: none
+        position: absolute
+        right: 0
+        top: 0
+        background-color: transparent
+        color: red
+        font-size: 20px
+    textarea
+      width: calc(100% - 20px)
+      height: 100%
+      resize: none
+      border: none
+      padding: 10px
+      font-size: 12px
+      font-family: inherit
+      &:focus
+        outline: none
