@@ -1,46 +1,32 @@
-# Getting Started with Create React App
+# Membres du groupes
+Pierre ZACHARY
+Nicolas LOISON
+Eoghann VEAUTE
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# Installation
+Pour geoserver, rien de plus simple : 
+pull le repo contenant geoserver et postgis : https://github.com/Pierre-ZACHARY/geoserver 
+taper la commande docker-compose up à la racine du repo 
+normalement tout est config et prêt à être utiliser ! ( admin:geoserver )
 
-## Available Scripts
+Pour l’appli react, assurez d’avoir nodejs d’installer : 
+pull ce repo : https://github.com/Pierre-ZACHARY/florlesbancs 
+npm install puis npm start devraient faire l’affaire
 
-In the project directory, you can run:
+Pour l’appli android : 
+vous devez commencer par build : npm run build
+puis sync les données avec l’app android : npx cap sync
+puis vous pouvez ouvrir l’app dans android studio ( via npx cap open android )  ou juste run l’app ( npx cap run android ) 
 
-### `npm start`
+L’application n’a pas été testé sur ios, cependant elle devrait fonctionner aussi bien que sur android, pour plus d’informations, voir : https://capacitorjs.com/docs/ios 
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+# TODO :
+✅Vous devez réaliser une application mobile sur les équipements de mobilier urbain d'Orléans.
+✅Chaque type d'équipement devra disposer d'une sémiologie différente (pas la même couleur, voire pas le même symbole).
+✅Pour les points d'apport volontaire, on utilise une couleur différente s'ils sont ouverts ou fermés (en fonction de l'heure).
+✅On doit pouvoir sélectionner le(s) type(s) d'équipement(s) visualisé(s).
+✅On doit pouvoir localiser le banc le plus proche. ✅ Dans l'idéal, on indique le trajet.
+✅On doit pouvoir suggérer via une API des installations supplémentaires de mobilier (type, coordonnées saisies à partir de la position courante ou d'un clic sur la carte).
+✅On doit pouvoir signaler une dégradation (mobilier concerné, date, nature de la dégradation).
+✅On doit fournir une version de l'appli à destination du service de la métropole pour localiser les dégradations et les marquer comme réparées. ✅ Dans cette version on peut aussi visualiser les suggestions d'installations (en cliquant sur une suggestion on a accès à sa description textuelle; idem pour les dégradations).
