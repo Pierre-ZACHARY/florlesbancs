@@ -1,5 +1,5 @@
 import {createContext, PropsWithChildren, useContext, useEffect, useState} from "react";
-import {TileWMS, Vector} from "ol/source";
+import {Cluster, TileWMS, Vector} from "ol/source";
 import {fromLonLat} from "ol/proj";
 import fetchGeoserverData from "../../utils/fetchGeoserverData";
 import {MapContext} from "./MapContainer";
@@ -7,11 +7,8 @@ import VectorLayer from "ol/layer/Vector";
 import {Geometry} from "ol/geom";
 import VectorSource from "ol/source/Vector";
 import {GeoJSON} from "ol/format";
-import {Icon, Style} from "ol/style";
-import styleFunctionEspacesVerts from "../../utils/styleFunctions";
 import LayersMapContext from "./LayerMapContext";
 import styleFunctionEspacesVerts, {styleFunctionDechets} from "../../utils/styleFunctions";
-import findNearestPointOnVectorLayer from "../../utils/findNearestPoint";
 import LayerSwitcher from "ol-ext/control/LayerSwitcher";
 
 
