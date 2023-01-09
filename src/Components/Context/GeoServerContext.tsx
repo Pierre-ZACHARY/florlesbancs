@@ -10,6 +10,8 @@ import {GeoJSON} from "ol/format";
 import {Icon, Style} from "ol/style";
 import styleFunctionEspacesVerts from "../../utils/styleFunctions";
 import LayersMapContext from "./LayerMapContext";
+import styleFunctionEspacesVerts, {styleFunctionDechets} from "../../utils/styleFunctions";
+import findNearestPointOnVectorLayer from "../../utils/findNearestPoint";
 import LayerSwitcher from "ol-ext/control/LayerSwitcher";
 
 
@@ -46,9 +48,12 @@ export default function GeoServerContextComponent(props: PropsWithChildren<{}>) 
                 }
                 featureMap.get(description).push( {...feature, geometry: {...feature.geometry, coordinates: fromLonLat(feature.geometry.coordinates)}} );
             });
+            const sortedMap = new Map(Array.from(featureMap.entries()).sort((a, b) => {
+                return a[1].length - b[1].length;
+            }));
 
             const vectorLayers: VectorLayer<Vector<Geometry>>[] = [];
-            featureMap.forEach((featureList, key) => {
+            sortedMap.forEach((featureList, key) => {
                 const geojsonData = {
                     type: 'FeatureCollection',
                     features: featureList
@@ -56,16 +61,18 @@ export default function GeoServerContextComponent(props: PropsWithChildren<{}>) 
                 const source = new VectorSource({
                     features: new GeoJSON().readFeatures(geojsonData)
                 });
-                const description = featureList[0].properties.descriptio;
-                const layer = new VectorLayer({
-                    title: key,
+                const clusterSource = new Cluster({
                     source: source,
+                    distance: 40,
+                });
+                const clusterLayer = new VectorLayer({
                     // @ts-ignore
-                    style: styleFunctionEspacesVerts,
-                })
-                layersMap.set(description, layer);
-                vectorLayers.push(layer);
-
+                    title: `${key} (${featureList.length})`,
+                    source: clusterSource,
+                    // @ts-ignore
+                    style: feature => styleFunctionEspacesVerts(feature, key),
+                });
+                vectorLayers.push(clusterLayer);
             });
 
             const pavMap = new Map();
@@ -94,7 +101,6 @@ export default function GeoServerContextComponent(props: PropsWithChildren<{}>) 
             });
 
             const pavVectorLayers: VectorLayer<Vector<Geometry>>[] = [];
-            const srcUrl = `${process.env.PUBLIC_URL}/`;
             pavMap.forEach((featureList,key) => {
                 const geojsonData = {
                     type: 'FeatureCollection',
@@ -103,59 +109,47 @@ export default function GeoServerContextComponent(props: PropsWithChildren<{}>) 
                 const source = new VectorSource({
                     features: new GeoJSON().readFeatures(geojsonData)
                 });
-                var layer;
-                var isOpen;
-                if (featureList.length > 0){
-                    isOpen = featureList[0].properties.status
-                }
-                else{
-                    isOpen = "closed";
-                }
+                const clusterSource = new Cluster({
+                    source: source,
+                    distance: 40
+                });
                 if (key) {
-                    layer = new VectorLayer({
-                        // @ts-ignore
-                        title: 'Poubelles dispo',
-                        source: source,
-                        style: new Style({
-                            image: new Icon({
-                                src: srcUrl + 'bin.svg',
-                                color: "#00ff00"
-                            }),
-                        }),
-                    })
+                    pavVectorLayers.push(
+                        new VectorLayer({
+                            // @ts-ignore
+                            title: 'Poubelles disponibles',
+                            source: clusterSource,
+                            // @ts-ignore
+                            style:  feature => styleFunctionDechets(feature, "#00ff00"),
+                        }))
                 } else {
-                    layer = new VectorLayer({
-                        // @ts-ignore
-                        title: 'Poubelles fermées',
-                        source: source,
-                        style: new Style({
-                            image: new Icon({
-                                src: srcUrl + 'bin.svg',
-                                color: "#ff0000"
-                            }),
-                        }),
-                    })
+                    pavVectorLayers.push(
+                        new VectorLayer({
+                            // @ts-ignore
+                            title: 'Poubelles fermées',
+                            source: clusterSource,
+                            // @ts-ignore
+                            style:  feature => styleFunctionDechets(feature, "#ff0000"),
+                        }))
                 }
-
-                layersMap.set(isOpen, layer );
-                pavVectorLayers.push(layer);
             });
 
-            console.log(layersMap)
-
             const layerSwitcher = new LayerSwitcher({
-
+                show_progress: false
             });
             map?.addControl(layerSwitcher);
 
 
             for (let i = 0 ; i < pavVectorLayers.length; i++){
+                pavVectorLayers[i].setVisible(false)
                 map?.addLayer(pavVectorLayers[i]);
             }
 
             for (let i = 0 ; i < vectorLayers.length; i++){
+                vectorLayers[i].setVisible(false)
                 map?.addLayer(vectorLayers[i]);
             }
+            vectorLayers[vectorLayers.length-2].setVisible(true) // On affiche seulement les bancs au lancement
 
 
 
