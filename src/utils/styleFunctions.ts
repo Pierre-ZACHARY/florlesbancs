@@ -1,8 +1,7 @@
 import {Feature} from "ol";
-import {Fill, Icon, Style} from "ol/style";
+import {Fill, Icon, Style, Text} from "ol/style";
 
-export default function styleFunctionEspacesVerts(feature: Feature): Style {
-    const description = feature.getProperties().descriptio;
+export default function styleFunctionEspacesVerts(feature: Feature, description: string): Style {
     let icon;
     const srcUrl = `${process.env.PUBLIC_URL}/`;
     switch (description) {
@@ -93,8 +92,31 @@ export default function styleFunctionEspacesVerts(feature: Feature): Style {
                 color: '#0000ff'
             });
     }
+    const size = feature.get('features').length;
     return new Style({
         image: icon,
+        text: new Text({
+            text: size > 1 ? size.toString() : "",
+            fill: new Fill({
+                color: '#000',
+            }),
+        }),
     });
 };
 
+export function styleFunctionDechets(feature: Feature, color: string): Style {
+    const srcUrl = `${process.env.PUBLIC_URL}/`;
+    const size = feature.get('features').length;
+    return new Style({
+        image: new Icon({
+            src: srcUrl + 'bin.svg',
+            color: color
+        }),
+        text: new Text({
+            text: size > 1 ? size.toString() : "",
+            fill: new Fill({
+                color: '#fff',
+            }),
+        }),
+    })
+}
