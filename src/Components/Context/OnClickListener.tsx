@@ -24,7 +24,7 @@ const OnClickListener = (props: PropsWithChildren<{}>) => {
 
                 // Find the nearest point on the vector layer to the click
                 const nearestPoint = findNearestPointOnVectorLayer(map, pixel, coordinate);
-
+                console.log(nearestPoint);
                 if(nearestPoint){
                     setNearestPoint(nearestPoint);
                 }
@@ -43,14 +43,14 @@ const OnClickListener = (props: PropsWithChildren<{}>) => {
 
     return (<NearestPointContext.Provider value={value}>
         {
-            nearestPoint && nearestPoint instanceof Feature<Geometry> && <LocationMarker onClick={() => {}} position={nearestPoint["values_"]["geometry"]["flatCoordinates"]} positioning={"bottom-center"}>
+            nearestPoint && nearestPoint instanceof Feature<Geometry> && <LocationMarker onClick={() => {}} position={nearestPoint["values_"]["features"][0]["values_"]["geometry"]["flatCoordinates"]} positioning={"bottom-center"}>
                 <FontAwesomeIcon icon={faLocationPin}/>
             </LocationMarker>
         }
         {
-            nearestPoint && nearestPoint instanceof Feature<Geometry> &&  <LocationMarker onClick={() => {}} position={nearestPoint["values_"]["geometry"]["flatCoordinates"]} positioning={"bottom-center"}>
+            nearestPoint && nearestPoint instanceof Feature<Geometry> &&  <LocationMarker onClick={() => {}} position={nearestPoint["values_"]["features"][0]["values_"]["geometry"]["flatCoordinates"]} positioning={"bottom-center"}>
                 <div style={{marginBottom: 50, pointerEvents: "none"}}>
-                    <h1 style={{color: "#1437e8", textAlign: "center"}}>{nearestPoint["values_"]["descriptio"]}</h1>
+                    <h1 style={{color: "#1437e8", textAlign: "center"}}>{nearestPoint["values_"]["features"][0]["values_"]["descriptio"]}</h1>
                 </div>
             </LocationMarker>
         }

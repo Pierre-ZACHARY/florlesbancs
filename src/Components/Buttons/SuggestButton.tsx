@@ -105,11 +105,11 @@ export const SuggestButton = () => {
             {modalOpen && selectedFeature instanceof Feature<Geometry> && <div className={styles.modal}>
                 <div className={styles.modalMain}>
                     <button className={styles.close} onClick={()=>{setModalOpen(false)}}><FontAwesomeIcon icon={faXmark}/></button>
-                    <h1>{selectedFeature && selectedFeature["values_"]["descriptio"]}</h1>
-                    <p>{selectedFeature && toLonLat(selectedFeature["values_"]["geometry"]["flatCoordinates"]).toString()}</p>
+                    <h1>{selectedFeature && selectedFeature["values_"]["features"][0]["values_"]["descriptio"]}</h1>
+                    <p>{selectedFeature && toLonLat(selectedFeature["values_"]["features"][0]["values_"]["geometry"]["flatCoordinates"]).toString()}</p>
                     <textarea placeholder={"Signaler une dégradation ici..."} onChange={(change) => {setSuggestionValue(change.target.value)}} value={suggestionValue}></textarea>
                     <button className={styles.send} onClick={()=>{
-                        if(selectedFeature) addDegradation(selectedFeature["values_"]["descriptio"], suggestionValue, toLonLat(selectedFeature["values_"]["geometry"]["flatCoordinates"], "EPSG:3857")).then(()=>setModalOpen(false))}
+                        if(selectedFeature) addDegradation(selectedFeature["values_"]["features"][0]["values_"]["descriptio"], suggestionValue, toLonLat(selectedFeature["values_"]["features"][0]["values_"]["geometry"]["flatCoordinates"], "EPSG:3857")).then(()=>setModalOpen(false))}
                     }>Envoyer</button>
                 </div>
             </div>}
