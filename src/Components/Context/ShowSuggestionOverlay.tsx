@@ -1,10 +1,11 @@
 import {useEffect, useState} from "react";
 import {SuggestionMarker} from "../Markers/SuggestionMarker";
+import serverAdress from "../../utils/serverAdress";
 
 
 
 async function fetchSuggestions(): Promise<any>{
-    const resp = await fetch("http://localhost:8080/geoserver/toto/wfs?service=WFS&version=1.1.0&request=GetFeature&typeName=suggestion_ajout&outputFormat=application/json")
+    const resp = await fetch(serverAdress()+"/geoserver/toto/wfs?service=WFS&version=1.1.0&request=GetFeature&typeName=suggestion_ajout&outputFormat=application/json")
     const json = await resp.json();
     console.log(json);
     return json;

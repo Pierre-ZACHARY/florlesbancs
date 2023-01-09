@@ -6,12 +6,13 @@ import {NearestPointContext} from "../Context/OnClickListener";
 import {toLonLat} from "ol/proj";
 import {Feature} from "ol";
 import {Geometry} from "ol/geom";
+import serverAdress from "../../utils/serverAdress";
 
 
 async function addDegradation(mobilier_concerne: String, nature_de_la_degradation: String, coordinates: number[]): Promise<any> {
     const now = new Date();
     const isoString = now.toISOString();
-    await fetch("http://localhost:8080/geoserver/toto/wfs", {
+    await fetch(serverAdress()+"/geoserver/toto/wfs", {
         method: 'post',
         headers: new Headers({
         'Authorization': 'Basic admib:geoserver',
@@ -46,7 +47,7 @@ async function addSuggestion(type: String, contenu: String, coordinates: number[
     const now = new Date();
     const isoString = now.toISOString();
     //@ts-ignore
-    await fetch("http://localhost:8080/geoserver/toto/wfs", {
+    await fetch(serverAdress()+"/geoserver/toto/wfs", {
         method: 'post',
         headers: new Headers({
             'Authorization': 'Basic admib:geoserver',

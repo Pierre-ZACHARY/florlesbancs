@@ -1,10 +1,11 @@
 import {useEffect, useState} from "react";
 import {DegradationMarker} from "../Markers/DegradationMarker";
+import serverAdress from "../../utils/serverAdress";
 
 
 
 async function fetchDegradations(): Promise<any>{
-    const resp = await fetch("http://localhost:8080/geoserver/toto/wfs?service=WFS&version=1.1.0&request=GetFeature&typeName=degradation&outputFormat=application/json")
+    const resp = await fetch(serverAdress()+"/geoserver/toto/wfs?service=WFS&version=1.1.0&request=GetFeature&typeName=degradation&outputFormat=application/json")
     const json = await resp.json();
     console.log(json);
     return json;

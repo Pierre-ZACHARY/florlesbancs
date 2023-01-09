@@ -2,8 +2,11 @@
   "name": "florlesbancs",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://pierre-zachary.github.io/florlesbancs",
   "dependencies": {
+    "@capacitor/android": "^4.6.1",
+    "@capacitor/core": "^4.6.1",
+    "@capacitor/device": "^4.1.0",
+    "@capacitor/geolocation": "^4.1.0",
     "@fortawesome/fontawesome-svg-core": "^6.2.1",
     "@fortawesome/free-brands-svg-icons": "^6.2.1",
     "@fortawesome/free-solid-svg-icons": "^6.2.1",
@@ -49,6 +52,7 @@
     ]
   },
   "devDependencies": {
+    "@capacitor/cli": "^4.6.1",
     "@types/ol-ext": "npm:@siedlerchr/types-ol-ext@^3.0.7"
   }
 }
